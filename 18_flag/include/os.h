@@ -7,6 +7,7 @@ typedef enum error_type_enum {
     ERROR_TIMEOUT = 1,
     ERROR_DEL = 2,
     ERROR_RESOURCE_FULL,
+    ERROR_NOT_OWNER,
 }error_e;
 
 #endif /*OS_H*/

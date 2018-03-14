@@ -47,6 +47,25 @@ task_t *event_wakeup(event_t *event, void *msg, uint32_t result)
     return task;
 }
 
+task_t *event_wakeup_task(event_t *event, task_t *task, void *msg, uint32_t result)
+{
+
+    uint32_t status = task_enter_critical();
+
+    list_remove(&event->wait_list, &task->prio_list_node);
+    task->wait_event = (event_t *)NULL;
+    task->event_msg = msg;
+    task->state &= ~OS_TASK_WAIT_MASK;
+
+    if (task->delay_ticks != 0) {
+        task_delay_wakeup(task);
+    }
+    task_ready(task);
+
+    task_exit_critical(status);
+    return task;
+}
+
 void event_remove_task(task_t *task, void *msg, uint32_t result)
 {
     uint32_t status = task_enter_critical();
@@ -95,3 +114,4 @@ uint32_t event_wait_count(event_t *event)
     task_exit_critical(status);
     return count;
 }
+

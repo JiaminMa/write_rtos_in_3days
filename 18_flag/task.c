@@ -16,6 +16,8 @@ static uint8_t g_sched_lock;
 static bitmap_t g_task_prio_bitmap;
 static list_t g_task_delay_list;
 
+extern void timer_module_tick_notify(void);
+
 static void idle_task_entry(void *param)
 {
     for(;;);
@@ -161,7 +163,9 @@ void task_system_tick_handler(void)
         }
     }
 
+    timer_module_tick_notify();
     task_exit_critical(status);
+
     task_sched();
 }
 

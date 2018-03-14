@@ -40,6 +40,10 @@ typedef struct task_tag {
     void *event_msg;
     uint32_t wait_event_result;
 
+    /*Flag group type*/
+    uint32_t wait_flag_type;
+    uint32_t event_flag;
+
 }task_t;
 
 typedef struct task_info_tag {
