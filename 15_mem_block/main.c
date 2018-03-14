@@ -39,28 +39,23 @@ void task1_entry(void *param)
 
     mem_block_init(&mem_block1, (uint8_t *)mem1, 100, 20);
     for(;;) {
-        printk("%s:#####1\n",__func__);
+        printk("%s\n", __func__);
         for (i = 0; i < 20; i++) {
             mem_block_alloc(&mem_block1, (uint8_t **)&block[i], 0);
+            printk("block:%x, mem[i]:%x\n", block[i], &mem1[i][0]);
         }
-        task_delay_s(2);
 
-        printk("%s:#####2\n",__func__);
         for (i = 0; i < 20; i++) {
-            mem_block_free(&mem_block1, (uint8_t *)&block[i]);
+            mem_block_free(&mem_block1, (uint8_t *)block[i]);
         }
-
-        printk("%s\n", __func__);
-        task_delay_s(1);
+        task_delay_s(5);
     }
 }
 
 void task2_entry(void *param)
 {
     for(;;) {
-        block_t block;
-        mem_block_alloc(&mem_block1, (uint8_t **)&block, 0);
-        printk("%s:%x\n", __func__, block);
+        printk("%s\n", __func__);
     }
 }
 
@@ -94,9 +89,11 @@ int main()
     init_task_module();
 
     task_init(&task1, task1_entry, (void *)0x11111111, 0, &task1_stk[1024]);
+#if 0
     task_init(&task2, task2_entry, (void *)0x22222222, 1, &task2_stk[1024]);
     task_init(&task3, task3_entry, (void *)0x33333333, 0, &task3_stk[1024]);
     task_init(&task4, task4_entry, (void *)0x44444444, 1, &task4_stk[1024]);
+#endif
     g_next_task = task_highest_ready();
     task_run_first();
 

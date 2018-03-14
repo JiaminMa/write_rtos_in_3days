@@ -172,18 +172,18 @@ cleanup:
 void list_append_last(list_t *list, list_node_t *list_node)
 {
     list_node_t *head = (list_node_t *)NULL;
-    list_node_t *next = (list_node_t *)NULL;
+    list_node_t *last = (list_node_t *)NULL;
     if (list == (list_t *)NULL) {
         goto cleanup;
     }
 
     head = &(list->head);
-    next = head->next;
+    last = head->prev;
 
-    head->prev = list_node;
-    next->next = list_node;
     list_node->next = head;
-    list_node->prev = next;
+    list_node->prev = last;
+    last->next = list_node;
+    head->prev = list_node;
     list->node_count++;
 cleanup:
     return;
@@ -202,6 +202,7 @@ list_node_t *list_remove_first(list_t *list)
     head = &(list->head);
     ret = head->next;
     if (ret == head) {
+        ret = (list_node_t *)NULL;
         goto cleanup;
     }
 
@@ -232,6 +233,7 @@ void list_remove(list_t *list, list_node_t *node)
 
     prev->next = next;
     next->prev = prev;
+    list->node_count--;
     list_node_init(node);
 cleanup:
     return;
