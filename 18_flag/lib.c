@@ -234,7 +234,6 @@ void list_remove(list_t *list, list_node_t *node)
     prev->next = next;
     next->prev = prev;
     list->node_count--;
-    list_node_init(node);
 cleanup:
     return;
 }
