@@ -1,5 +1,8 @@
-#include "os_stdio.h"
 #include <stdint.h>
+#include "cmsis_rv.h"
+#include "RV_Framework.h"
+#include "RV_Report.h"
+#include "RV_Typedefs.h"
 
 extern uint32_t _bss;
 extern uint32_t _ebss;
@@ -17,8 +20,6 @@ int main()
 {
 
     clear_bss();
-    DEBUG("psp:0x%x\n", get_psp());
-    DEBUG("msp:0x%x\n", get_msp());
 
     for(;;);
     return 0;

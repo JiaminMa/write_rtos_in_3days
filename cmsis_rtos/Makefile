@@ -6,7 +6,7 @@ OBJCOPY = ${TOOL_CHAIN}objcopy
 OBJDUMP = $(TOOL_CHAIN)objdump
 
 CFLAGS		:= -Wall -g -fno-builtin -gdwarf-2 -gstrict-dwarf -mcpu=cortex-m3 -mthumb -nostartfiles  --specs=nosys.specs -std=c11 \
-				-O0 -Iinclude
+				-O0 -Iinclude -ICMSIS_RV -ICMSIS_RV/Include
 LDFLAGS		:= -g
 
 objs := int_vector.o main.o cm3.o os_stdio.o cm3_s.o task.o lib.o event.o sem.o mailbox.o memblock.o timer.o mutex.o flag_group.o \
