@@ -100,7 +100,7 @@ void timer_destory(timer_t *timer)
     timer->state = TIMER_DESTORYED;
 }
 
-static void timer_soft_task(void *param)
+static void timer_soft_task(const void *param)
 {
     for(;;) {
         sem_acquire(&g_timer_tick_sem, 0);
@@ -128,6 +128,7 @@ void timer_module_init()
     sem_init(&g_timer_tick_sem, 0, 0);
 
     task_init(&g_timer_task, &timer_soft_task, (void *)0,
-            OS_TIMERTASK_PRIO, &g_timer_task_stack[OS_TIMERTASK_STACK_SIZE]);
+            OS_TIMERTASK_PRIO, &g_timer_task_stack[OS_TIMERTASK_STACK_SIZE], &g_timer_task_stack[0],
+            OS_TIMERTASK_STACK_SIZE);
 
 }

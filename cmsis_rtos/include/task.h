@@ -16,6 +16,9 @@ typedef uint32_t task_stack_t;
 typedef struct task_tag {
 
     task_stack_t *stack;
+    task_stack_t *stack_bottom;
+    uint32_t stack_size;
+
     uint32_t delay_ticks;
     uint32_t prio;
 
@@ -60,7 +63,8 @@ extern task_t *g_current_task;
 extern task_t *g_next_task;
 extern list_t g_task_table[OS_PRIO_COUNT];
 
-extern void task_init (task_t * task, void (*entry)(const void *), void *param, uint32_t prio, uint32_t * stack);
+extern void task_init (task_t * task, void (*entry)(const void *), void *param, uint32_t prio, uint32_t * stack,
+                        uint32_t *stack_bottom, uint32_t stack_size);
 extern void task_sched(void);
 extern void task_switch(void);
 extern void task_run_first(void);

@@ -19,12 +19,13 @@ uint32_t g_os_systick = 0;
 
 extern void timer_module_tick_notify(void);
 
-static void idle_task_entry(void *param)
+static void idle_task_entry(const void *param)
 {
     for(;;);
 }
 
-void task_init (task_t * task, void (*entry)(const void *), void *param, uint32_t prio, uint32_t * stack)
+void task_init (task_t * task, void (*entry)(const void *), void *param, uint32_t prio, uint32_t * stack,
+                        uint32_t *stack_bottom, uint32_t stack_size)
 {
     DEBUG("%s\n", __func__);
     *(--stack) = (uint32_t) (1 << 24);          /*XPSR, Thumb Mode*/
@@ -69,6 +70,8 @@ void task_init (task_t * task, void (*entry)(const void *), void *param, uint32_
     task->wait_event_result = NO_ERROR;
 
     task->is_used = 1;
+    task->stack_bottom = stack_bottom;
+    task->stack_size = stack_size;
 }
 
 void task_sched()
@@ -182,7 +185,7 @@ void init_task_module()
         list_init(&g_task_table[i]);
     }
 
-    task_init(&g_idle_task_obj, idle_task_entry, (void *)0, OS_PRIO_COUNT - 1,  &g_idle_task_stk[1024]);
+    task_init(&g_idle_task_obj, idle_task_entry, (void *)0, OS_PRIO_COUNT - 1,  &g_idle_task_stk[1024], &g_idle_task[0], 1024);
     g_idle_task = &g_idle_task_obj;
 }
 

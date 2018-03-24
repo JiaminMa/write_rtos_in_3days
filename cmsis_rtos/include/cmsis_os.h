@@ -42,6 +42,7 @@ extern uint32_t osKernelSysTick(void);
 #define HEAP_MEM_POOL       (1024UL * 32UL)
 #define MAX_TASK_NUM        5
 
+#if 0
 typedef enum {
     osPriorityIdle = -3,
     osPriorityLow = -2,
@@ -52,6 +53,8 @@ typedef enum {
     osPriorityRealtime = +3,
     osPriorityError = 0x84
 }osPriority;
+#endif
+typedef uint32_t osPriority;
 
 typedef task_t * osThreadId;
 

@@ -167,7 +167,9 @@ osThreadId osThreadCreate(const osThreadDef_t * thread_def, void *argument)
               thread_def->pthread,
               argument,
               thread_def->tpriority,
-              &(p_task_stk[thread_def->stacksize]));
+              &(p_task_stk[thread_def->stacksize]),
+              &(p_task_stk[0]),
+              thread_def->stacksize);
 
     return p_task;
 }
