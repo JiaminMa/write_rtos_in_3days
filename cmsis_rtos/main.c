@@ -1,10 +1,13 @@
 #include <stdint.h>
 #include "cmsis_os.h"
 
-osThreadId thread_id0;
-osThreadId thread_id1;
+/* Because CMSIS RTOS use CamelNaming, so the app
+ * use the same naming type
+ * */
+osThreadId threadId0;
+osThreadId threadId1;
 
-void thread_0(const void *arg)
+void thread0(const void *arg)
 {
     init_systick(1);
 
@@ -14,7 +17,7 @@ void thread_0(const void *arg)
     }
 }
 
-void thread_1(const void *arg)
+void thread1(const void *arg)
 {
     for (;;) {
         printk("%s\n", __func__);
@@ -22,15 +25,15 @@ void thread_1(const void *arg)
     }
 }
 
-osThreadDef(thread_0, 0, 1, 1024);
-osThreadDef(thread_1, 1, 1, 1024);
+osThreadDef(thread0, 0, 1, 1024);
+osThreadDef(thread1, 1, 1, 1024);
 
 int main()
 {
     osKernelInitialize();
 
-    thread_id0 = osThreadCreate(osThread(thread_0), (void *)NULL);
-    thread_id1 = osThreadCreate(osThread(thread_1), (void *)NULL);
+    threadId0 = osThreadCreate(osThread(thread0), (void *)NULL);
+    threadId1 = osThreadCreate(osThread(thread1), (void *)NULL);
 
     osKernelStart();
 

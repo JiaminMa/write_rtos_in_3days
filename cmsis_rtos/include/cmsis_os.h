@@ -5,6 +5,7 @@
 #include "os_stdio.h"
 #include "os.h"
 #include "cm3.h"
+#include "timer.h"
 /*Kernel information and control*/
 #define osCMSIS                             0x10002
 #define osCMSIS_KERNEL                      0x10000
@@ -83,5 +84,25 @@ extern osStatus osThreadYield(void);
 
 /*Generic Wait Functions*/
 extern osStatus osDelay(uint32_t millisec);
+
+/*Timer Management*/
+typedef enum {
+    osTimerOnce = 0,
+    osTimerPeriodic = 1
+}os_timer_type;
+
+typedef void(* os_timer_func)(void const *argument);
+typedef timer_t * osTimerId;
+typedef struct {
+    os_timer_func function;
+}osTimerDef_t;
+#define osTimerDef(name, function) \
+const osTimerDef_t os_timer_def_##name = {(function)}
+
+#define osTimer(name) &os_timer_def_##name
+extern osTimerId osTimerCreate(const osTimerDef_t *timer_def, os_timer_type type, void *argument);
+extern osStatus osTimerStart(osTimerId timer_id, uint32_t millisec);
+extern osStatus osTimerStop(osTimerId timer_id);
+extern osStatus osTimerDelete(osTimerId timer_id);
 
 #endif /*CMSIS_OS_H*/
