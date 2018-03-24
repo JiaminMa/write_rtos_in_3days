@@ -228,3 +228,9 @@ osStatus osThreadYield(void)
     task_sched();
     return osOK;
 }
+
+osStatus osDelay(uint32_t millisec)
+{
+    task_delay(millisec);
+    return osOK;
+}

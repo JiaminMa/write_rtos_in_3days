@@ -7,17 +7,10 @@ osThreadId thread_id1;
 void thread_0(const void *arg)
 {
     init_systick(1);
-    uint32_t i = 0;
-    osThreadId thread_id;
+
     for (;;) {
-        thread_id = osThreadGetId();
-        printk("%s: thread_id0:%x, thread_id:%x, prio:%d\n", __func__, thread_id0,  thread_id, osThreadGetPriority(thread_id));
-        i++;
-        osThreadSetPriority(thread_id0, i);
-        task_delay(1000);
-        if (i == 5) {
-            osThreadTerminate(thread_id0);
-        }
+        printk("%s\n", __func__);
+        osDelay(1000);
     }
 }
 
@@ -25,7 +18,7 @@ void thread_1(const void *arg)
 {
     for (;;) {
         printk("%s\n", __func__);
-        task_delay(1000);
+        osDelay(1000);
     }
 }
 

@@ -81,4 +81,7 @@ extern osThreadId osThreadGetId(void);
 extern osStatus osThreadSetPriority(osThreadId thread_id, osPriority priority);
 extern osStatus osThreadYield(void);
 
+/*Generic Wait Functions*/
+extern osStatus osDelay(uint32_t millisec);
+
 #endif /*CMSIS_OS_H*/
