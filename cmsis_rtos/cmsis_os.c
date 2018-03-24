@@ -137,6 +137,7 @@ task_stack_t stack[1024];
 osThreadId osThreadCreate(const osThreadDef_t * thread_def, void *argument)
 {
     uint32_t i = 0;
+    uint32_t status = task_enter_critical();
     osThreadId p_task = (osThreadId) NULL;
     task_stack_t *p_task_stk;
 
@@ -151,6 +152,7 @@ osThreadId osThreadCreate(const osThreadDef_t * thread_def, void *argument)
     /*Return NULL if there's no available task*/
     if (p_task == (osThreadId)NULL) {
         DEBUG("%s:no available task\n", __func__);
+        task_exit_critical(status);
         return (osThreadId)NULL;
     }
 
@@ -159,6 +161,7 @@ osThreadId osThreadCreate(const osThreadDef_t * thread_def, void *argument)
     if (p_task_stk == (task_stack_t)NULL) {
         /*No stack memory for task*/
         DEBUG("%s:No stack memory for task\n", __func__);
+        task_exit_critical(status);
         return (osThreadId)NULL;
     }
 
@@ -171,5 +174,57 @@ osThreadId osThreadCreate(const osThreadDef_t * thread_def, void *argument)
               &(p_task_stk[0]),
               thread_def->stacksize);
 
+    task_exit_critical(status);
     return p_task;
+}
+
+osStatus osThreadTerminate(osThreadId thread_id)
+{
+    uint32_t status = task_enter_critical();
+    task_force_delete(thread_id);
+    rt_free_mem(&g_heap, thread_id->stack_bottom);
+    task_exit_critical(status);
+    return osOK;
+}
+
+osStatus osThreadStop(osThreadId thread_id)
+{
+    uint32_t status = task_enter_critical();
+    task_request_delete(thread_id);
+    rt_free_mem(&g_heap, thread_id->stack_bottom);
+    task_exit_critical(status);
+    return osOK;
+}
+
+osPriority osThreadGetPriority(osThreadId thread_id)
+{
+    return thread_id->prio;
+}
+
+osStatus osThreadSetPriority(osThreadId thread_id, osPriority priority)
+{
+    /*TODO: Does it need to call shecd after set prio*/
+    uint32_t status = task_enter_critical();
+    task_unready(thread_id);
+    thread_id->prio = priority;
+    task_ready(thread_id);
+    task_exit_critical(status);
+    return osOK;
+}
+
+osThreadId osThreadGetId(void)
+{
+    return g_current_task;
+}
+
+/*Pass the cpu to the same prio or higher prio task*/
+osStatus osThreadYield(void)
+{
+    uint32_t status = task_enter_critical();
+    osThreadId thread_id = osThreadGetId();
+    task_unready(thread_id);
+    task_ready(thread_id);
+    task_exit_critical(status);
+    task_sched();
+    return osOK;
 }

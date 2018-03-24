@@ -185,7 +185,7 @@ void init_task_module()
         list_init(&g_task_table[i]);
     }
 
-    task_init(&g_idle_task_obj, idle_task_entry, (void *)0, OS_PRIO_COUNT - 1,  &g_idle_task_stk[1024], &g_idle_task[0], 1024);
+    task_init(&g_idle_task_obj, idle_task_entry, (void *)0, OS_PRIO_COUNT - 1,  &g_idle_task_stk[1024], &g_idle_task_stk[0], 1024);
     g_idle_task = &g_idle_task_obj;
 }
 

@@ -74,6 +74,11 @@ const osThreadDef_t os_thread_def_##name = \
 #define osThread(name)   &os_thread_def_##name
 
 extern osThreadId osThreadCreate(const osThreadDef_t * thread_def, void *argument);
-
+extern osStatus osThreadTerminate(osThreadId thread_id);
+extern osStatus osThreadStop(osThreadId thread_id);
+extern osPriority osThreadGetPriority(osThreadId thread_id);
+extern osThreadId osThreadGetId(void);
+extern osStatus osThreadSetPriority(osThreadId thread_id, osPriority priority);
+extern osStatus osThreadYield(void);
 
 #endif /*CMSIS_OS_H*/
