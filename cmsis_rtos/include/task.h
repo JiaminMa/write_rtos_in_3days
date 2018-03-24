@@ -44,6 +44,7 @@ typedef struct task_tag {
     uint32_t wait_flag_type;
     uint32_t event_flag;
 
+    uint32_t is_used;
 }task_t;
 
 typedef struct task_info_tag {
@@ -59,7 +60,7 @@ extern task_t *g_current_task;
 extern task_t *g_next_task;
 extern list_t g_task_table[OS_PRIO_COUNT];
 
-extern void task_init (task_t * task, void (*entry)(void *), void *param, uint32_t prio, uint32_t * stack);
+extern void task_init (task_t * task, void (*entry)(const void *), void *param, uint32_t prio, uint32_t * stack);
 extern void task_sched(void);
 extern void task_switch(void);
 extern void task_run_first(void);

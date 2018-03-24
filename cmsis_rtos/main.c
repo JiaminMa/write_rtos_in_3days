@@ -1,25 +1,36 @@
 #include <stdint.h>
-#include "cmsis_rv.h"
-#include "RV_Framework.h"
-#include "RV_Report.h"
-#include "RV_Typedefs.h"
+#include "cmsis_os.h"
 
-extern uint32_t _bss;
-extern uint32_t _ebss;
-
-static inline void clear_bss(void)
+void thread_0(const void *arg)
 {
-    uint8_t *start = (uint8_t *)_bss;
-    while ((uint32_t)start < _ebss) {
-        *start = 0;
-        start++;
+    init_systick(1);
+    for (;;) {
+        printk("%s\n", __func__);
+        task_delay(1000);
     }
 }
 
+void thread_1(const void *arg)
+{
+    for (;;) {
+        printk("%s\n", __func__);
+        task_delay(1000);
+    }
+}
+
+osThreadDef(thread_0, 0, 1, 1024);
+osThreadDef(thread_1, 1, 1, 1024);
+osThreadId thread_id0;
+osThreadId thread_id1;
+
 int main()
 {
+    osKernelInitialize();
 
-    clear_bss();
+    thread_id0 = osThreadCreate(osThread(thread_0), (void *)NULL);
+    thread_id1 = osThreadCreate(osThread(thread_1), (void *)NULL);
+
+    osKernelStart();
 
     for(;;);
     return 0;

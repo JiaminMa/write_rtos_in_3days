@@ -24,7 +24,7 @@ static void idle_task_entry(void *param)
     for(;;);
 }
 
-void task_init (task_t * task, void (*entry)(void *), void *param, uint32_t prio, uint32_t * stack)
+void task_init (task_t * task, void (*entry)(const void *), void *param, uint32_t prio, uint32_t * stack)
 {
     DEBUG("%s\n", __func__);
     *(--stack) = (uint32_t) (1 << 24);          /*XPSR, Thumb Mode*/
@@ -68,6 +68,7 @@ void task_init (task_t * task, void (*entry)(void *), void *param, uint32_t prio
     task->event_msg = (void *)0;
     task->wait_event_result = NO_ERROR;
 
+    task->is_used = 1;
 }
 
 void task_sched()
